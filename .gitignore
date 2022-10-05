@@ -1,0 +1,6 @@
+# Project exclude paths
+/data/
+/lightning_logs/
+/saving_ckpt/
+/saving_ckpt1/
+/wandb/
