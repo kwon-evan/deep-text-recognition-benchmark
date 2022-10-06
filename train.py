@@ -1,17 +1,18 @@
 import os
-
+import sys
 from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint, LearningRateMonitor, RichProgressBar
-
-from model.LPRNET import LPRNet, CHARS
-from model.STN import STNet
-from model.STLPRNet import STLPRNet
-from data.STLPRNDataModule import STLPRNDataModule
 import argparse
 import torch
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import WandbLogger
 import warnings
+
+sys.path.append('.')
+from model.LPRNET import LPRNet, CHARS
+from model.STN import STNet
+from model.STLPRNet import STLPRNet
+from data.STLPRNDataModule import STLPRNDataModule
 
 warnings.filterwarnings("ignore")
 wandb_logger = WandbLogger(project="STLPRNet")

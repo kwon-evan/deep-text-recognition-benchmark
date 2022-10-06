@@ -7,9 +7,9 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 import pytorch_lightning as pl
 
-from STLPRNet.model.LPRNET import LPRNet, CHARS
-from STLPRNet.data.load_data import LPRDataLoader, collate_fn
-from STLPRNet.model.STN import STNet
+from model.LPRNET import LPRNet, CHARS
+from data.load_data import LPRDataLoader, collate_fn
+from model.STN import STNet
 
 T_length = 18
 
@@ -145,6 +145,14 @@ class STLPRNet(pl.LightningModule):
         predict, _ = decode(preds, CHARS)  # list of predict output
 
         return predict
+
+    def detect(self, image):
+        image = (np.transpose(np.float32(image), (2, 0, 1)) - 127.5) * 0.0078125
+        data = torch.from_numpy(image).float().unsqueeze(0)
+        logits = self(data)
+        preds = logits.cpu().detach().numpy()  # (batch size, 68, 18)
+        predict, _ = decode(preds, CHARS)  # list of predict output
+        return predict[0]
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam([{'params': self.STN.parameters(), 'weight_decay': self.hparams.weight_decay},

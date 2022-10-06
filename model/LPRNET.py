@@ -81,13 +81,13 @@ class LPRNet(nn.Module):
             nn.BatchNorm2d(num_features=256),  # 12
             nn.Mish(),
             nn.MaxPool3d(kernel_size=(1, 3, 3), stride=(4, 1, 2)),  # 14
-            # nn.Dropout(dropout_rate),
-            DropBlock(block_size=3, p=dropout_rate),
+            nn.Dropout(dropout_rate),
+            # DropBlock(block_size=3, p=dropout_rate),
             nn.Conv2d(in_channels=64, out_channels=256, kernel_size=(1, 4), stride=1),  # 16
             nn.BatchNorm2d(num_features=256),
             nn.Mish(),  # 18
-            # nn.Dropout(dropout_rate),
-            DropBlock(block_size=3, p=dropout_rate),
+            nn.Dropout(dropout_rate),
+            # DropBlock(block_size=3, p=dropout_rate),
             nn.Conv2d(in_channels=256, out_channels=class_num, kernel_size=(13, 1), stride=1),  # 20
             nn.BatchNorm2d(num_features=class_num),
             nn.Mish(),  # *** 22 ***
