@@ -35,9 +35,12 @@ if __name__ == '__main__':
     ).load_from_checkpoint(args.weight)
     print("Successful to build network in {:2.3f}ms".format(1E3*(time.time() - load_model_start)))
 
-    since = time.time()
     img = cv2.imread(args.image_path)
     img = cv2.resize(img, (94, 24), interpolation=cv2.INTER_CUBIC)
-    print("RESULT:{},".format(STLPRN.detect(img)), "model inference in {:2.3f}ms"
-          .format(1E3*(time.time() - since)))
+
+    since = time.time()
+    pred = STLPRN.detect(img)
+    end = time.time()
+
+    print("RESULT:{},".format(pred), "model inference in {:2.3f}ms".format(1E3*(end - since)))
 
