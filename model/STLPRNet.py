@@ -1,12 +1,11 @@
 import re
-from argparse import Namespace
-from typing import Optional, Any
+from typing import Any
 
 import cv2
 import numpy as np
 import torch
 import torch.nn.functional as F
-from cv2.cv2 import resize, INTER_CUBIC
+from cv2.cv2 import resize
 from torch.utils.data import DataLoader
 import pytorch_lightning as pl
 
