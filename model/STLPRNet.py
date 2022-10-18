@@ -1,3 +1,4 @@
+import re
 from argparse import Namespace
 from typing import Optional, Any
 
@@ -147,17 +148,25 @@ class STLPRNet(pl.LightningModule):
 
         return predict
 
-    def detect(self, images):
+    def detect_imgs(self, images, device, half):
         predicts = []
+
         for image in images:
             image = resize(image, (94, 24), interpolation=INTER_CUBIC)
             image = (np.transpose(np.float32(image), (2, 0, 1)) - 127.5) * 0.0078125
-            data = torch.from_numpy(image).float().unsqueeze(0)
+            data = torch.from_numpy(image).float().unsqueeze(0).to(device)
+            data = data.half() if half else data.float()  # uint8 to fp16/32
             logits = self(data)
             preds = logits.cpu().detach().numpy()  # (batch size, 68, 18)
             predict, _ = decode(preds, CHARS)  # list of predict output
             predicts.append(predict[0])
+
         return predicts
+
+    def check(self, label):
+        kor_plate_pattern = re.compile('[0-9]{2,3}[가-힣][0-9]{4}')
+        plate_name = kor_plate_pattern.findall(label)
+        return True if plate_name else False
 
     def image2data(self, image):
         return (np.transpose(
