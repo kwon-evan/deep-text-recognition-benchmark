@@ -2,6 +2,7 @@ import re
 from argparse import Namespace
 from typing import Optional, Any
 
+import cv2
 import numpy as np
 import torch
 import torch.nn.functional as F
@@ -152,19 +153,22 @@ class STLPRNet(pl.LightningModule):
         predicts = []
 
         for image in images:
-            image = resize(image, (94, 24), interpolation=INTER_CUBIC)
-            image = (np.transpose(np.float32(image), (2, 0, 1)) - 127.5) * 0.0078125
-            data = torch.from_numpy(image).float().unsqueeze(0).to(device)
-            data = data.half() if half else data.float()  # uint8 to fp16/32
-            logits = self(data)
-            preds = logits.cpu().detach().numpy()  # (batch size, 68, 18)
-            predict, _ = decode(preds, CHARS)  # list of predict output
-            predicts.append(predict[0])
+            if 0 not in image.shape:
+                image = resize(image, (94, 24), interpolation=cv2.INTER_LANCZOS4)
+                image = (np.transpose(np.float32(image), (2, 0, 1)) - 127.5) * 0.0078125
+                data = torch.from_numpy(image).float().unsqueeze(0).to(device)
+                data = data.half() if half else data.float()  # uint8 to fp16/32
+                logits = self(data)
+                preds = logits.cpu().detach().numpy()  # (batch size, 68, 18)
+                predict, _ = decode(preds, CHARS)  # list of predict output
+                predicts.append(predict[0])
+            else:
+                predicts.append("")
 
         return predicts
 
     def check(self, label):
-        kor_plate_pattern = re.compile('[0-9]{2,3}[가-힣][0-9]{4}')
+        kor_plate_pattern = re.compile('\d{2,3}[가-힣]\d{4}')
         plate_name = kor_plate_pattern.findall(label)
         return True if plate_name else False
 
