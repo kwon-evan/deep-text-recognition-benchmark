@@ -174,7 +174,7 @@ class STLPRNet(pl.LightningModule):
     def image2data(self, image):
         return (np.transpose(
             np.float32(
-                resize(image, (94, 24), interpolation=INTER_CUBIC)
+                resize(image, (94, 24), interpolation=cv2.INTER_CUBIC)
             ), (2, 0, 1)
         ) - 127.5) * 0.0078125
 
