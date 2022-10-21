@@ -26,7 +26,8 @@ def decode(preds, CHARS):
         for j in range(pred.shape[1]):
             pred_label.append(np.argmax(pred[:, j], axis=0))
         no_repeat_blank_label = list()
-        pre_c = pred_label[0]
+        pre_c = ''
+        # pre_c = pred_label[0]
         for c in pred_label:  # dropout repeate label and blank label
             if (pre_c == c) or (c == len(CHARS) - 1):
                 if c == len(CHARS) - 1:
