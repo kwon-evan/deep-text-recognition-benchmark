@@ -149,6 +149,18 @@ class STLPRNet(pl.LightningModule):
 
         return predict
 
+    def detect(self, image, device):
+        if all(image.shape):
+            image = resize(image, (94, 24), interpolation=cv2.INTER_LANCZOS4)
+            image = (np.transpose(np.float32(image), (2, 0, 1)) - 127.5) * 0.0078125
+            data = torch.from_numpy(image).float().unsqueeze(0).to(device)
+            logits = self(data)
+            preds = logits.cpu().detach().numpy()  # (batch size, 68, 18)
+            predict, _ = decode(preds, CHARS)  # list of predict output
+            return predict[0]
+        else:
+            return ""
+
     def detect_imgs(self, images, device, half):
         predicts = []
 
@@ -178,6 +190,11 @@ class STLPRNet(pl.LightningModule):
                 resize(image, (94, 24), interpolation=cv2.INTER_CUBIC)
             ), (2, 0, 1)
         ) - 127.5) * 0.0078125
+
+    def get_progress_bar_dict(self):
+        bar_dict = super().get_progress_bar_dict()
+        bar_dict.pop("v_num", None)
+        return bar_dict
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam([{'params': self.STN.parameters(), 'weight_decay': self.hparams.weight_decay},
