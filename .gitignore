@@ -1,5 +1,6 @@
-.idea/
 # Project exclude paths
-/data/
+/data/train/
+/data/valid/
+/data/normal/
 /lightning_logs/
 /wandb/

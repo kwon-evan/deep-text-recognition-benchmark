@@ -1,22 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-import os
+import sys
 import warnings
-
 from pytorch_lightning import Trainer
-
-from STLPRNet.data.load_data import ImgDataLoader
-from data.STLPRNDataModule import STLPRNDataModule
-
 from PIL import Image, ImageDraw, ImageFont
-from model.LPRNET import LPRNet, CHARS
-from model.STN import STNet
-from model.STLPRNet import STLPRNet
 import numpy as np
 import argparse
 import torch
 import time
 import cv2
+sys.path.append('.')
+from model.model import Model
+from data.load_data import ImgDataLoader
+from data.data_module import DataModule
 
 warnings.filterwarnings("ignore")
 
@@ -75,12 +71,14 @@ if __name__ == '__main__':
     parser.add_argument("-image_dir", help='image dir path', default='data/test/', type=str)
     parser.add_argument('--img_size', default=(94, 24), help='the image size')
     parser.add_argument('--batch_size', type=int, default=512, help='batch size')
-    parser.add_argument('--weight', type=str, default='saving_ckpt/last.ckpt', help='path to model weight')
+    parser.add_argument('--weight', type=str, default='saving_ckpt/best.ckpt', help='path to model weight')
     args = parser.parse_args()
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-    image1 = cv2.imread('data/test/01가1134.jpg')
-    image2 = cv2.imread('data/test/01가1134-5.jpg')
+    image1 = cv2.imread('data/valid/300두4673.jpg')
+    image2 = cv2.imread('data/valid/99루4030.jpg')
+    cv2.imshow('1', image1)
+    cv2.imshow('2', image2)
     images = [image1, image2]
 
     load_model_start = time.time()
@@ -102,3 +100,5 @@ if __name__ == '__main__':
     print(predicts)
     print("model inference in {:2.3f} seconds".format(time_total))
     print(f"img/s: {time_total / 2}")
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()

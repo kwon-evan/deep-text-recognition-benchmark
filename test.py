@@ -5,12 +5,10 @@ import warnings
 
 from pytorch_lightning import Trainer
 
-from data.STLPRNDataModule import STLPRNDataModule
+from data.data_module import DataModule
 
 from PIL import Image, ImageDraw, ImageFont
-from model.LPRNET import LPRNet, CHARS
-from model.STN import STNet
-from model.STLPRNet import STLPRNet
+from model.model import Model
 import numpy as np
 import argparse
 import torch
@@ -71,25 +69,26 @@ def decode(preds, CHARS):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='LPR Demo')
-    parser.add_argument("-image_dir", help='image dir path', default='data/test/', type=str)
-    parser.add_argument('--img_size', default=(94, 24), help='the image size')
-    parser.add_argument('--batch_size', type=int, default=512, help='batch size')
-    parser.add_argument('--weight', type=str, default='saving_ckpt/best.ckpt', help='path to model weight')
+    parser.add_argument("-image_dir", help='image dir path', default='data/normal/비사업용-보통/', type=str)
+    parser.add_argument('--img_size', default=(100, 50), help='the image size')
+    parser.add_argument('--batch_size', type=int, default=256, help='batch size')
+    parser.add_argument('--weight', type=str, default='saving_ckpt_11-15_11:18/best.ckpt', help='path to model weight')
     args = parser.parse_args()
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     load_model_start = time.time()
-    STLPRN = STLPRNet(
-        **vars(args)
-    ).load_from_checkpoint(args.weight)
+    STLPRN = Model(**vars(args)).load_from_checkpoint(args.weight)
     print(f"Successful to build network in {time.time() - load_model_start}s")
 
-    data_module = STLPRNDataModule(test_data_dir=args.image_dir,
-                                   img_size=args.img_size,
-                                   batch_size=args.batch_size)
+    data_module = DataModule(
+            test_data_dir=args.image_dir,
+            img_size=args.img_size,
+            batch_size=args.batch_size
+    )
+
     trainer = Trainer(
-        gpus=torch.cuda.device_count(),
-        accelerator="gpu",
+            gpus=torch.cuda.device_count(),
+            accelerator="gpu",
     )
 
     since = time.time()
@@ -99,4 +98,4 @@ if __name__ == '__main__':
     time_total = time.time() - since
 
     print("model inference in {:2.3f} seconds".format(time_total))
-    print(f"img/s: {time_total/img_cnt}")
+    print(f"img/ms: {time_total/img_cnt * 1000}")
