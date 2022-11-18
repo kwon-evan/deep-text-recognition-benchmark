@@ -1,4 +1,4 @@
-# STLPRNet
+# LPRNet
 Spatial Transformer + License Plate Recognition Network \
 A High Performance And Lightweight Korean License Plate Recognition.\
 Pytorch-Lightning Implementation for [sirius-ai/LPRNet_Pytorch](https://github.com/sirius-ai/LPRNet_Pytorch)
