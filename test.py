@@ -69,10 +69,10 @@ def decode(preds, CHARS):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='LPR Demo')
-    parser.add_argument("-image_dir", help='image dir path', default='data/normal/비사업용-보통/', type=str)
-    parser.add_argument('--img_size', default=(100, 50), help='the image size')
+    parser.add_argument("-image_dir", help='image dir path', default='data/test/', type=str)
+    parser.add_argument('--img_size', default=(94, 24), help='the image size')
     parser.add_argument('--batch_size', type=int, default=256, help='batch size')
-    parser.add_argument('--weight', type=str, default='saving_ckpt_11-15_11:18/best.ckpt', help='path to model weight')
+    parser.add_argument('--weight', type=str, default='saving_ckpt_11-18_16:59/epoch=31-val-acc=0.952.ckpt', help='path to model weight')
     args = parser.parse_args()
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 

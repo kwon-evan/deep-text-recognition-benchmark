@@ -1,6 +1,0 @@
-# Project exclude paths
-/data/train/
-/data/valid/
-/data/normal/
-/lightning_logs/
-/wandb/
