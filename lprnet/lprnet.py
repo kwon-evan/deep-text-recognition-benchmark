@@ -211,3 +211,18 @@ class LPRNet(pl.LightningModule):
                     "strict": True,
                     "name": "lr"
                 }}
+
+    def detect(self, image, device):
+        import numpy as np
+        from cv2.cv2 import resize, INTER_LANCZOS4
+
+        if all(image.shape):
+            image = resize(image, self.args.img_size, interpolation=INTER_LANCZOS4)
+            image = (np.transpose(np.float32(image), (2, 0, 1)) - 127.5) * 0.0078125
+            data = torch.from_numpy(image).float().unsqueeze(0).to(device)
+            logits = self(data)
+            preds = logits.cpu().detach().numpy()  # (batch size, 68, 18)
+            predict, _ = decode(preds, self.args.chars)  # list of predict output
+            return predict[0]
+        else:
+            return ""
