@@ -3,7 +3,8 @@ import re
 import random
 import torch
 import numpy as np
-from cv2 import cv2
+# from cv2 import cv2
+import cv2
 from torch.utils.data import Dataset, DataLoader
 from imutils import paths
 import pytorch_lightning as pl
@@ -53,6 +54,8 @@ class LPRNetDataset(Dataset):
         elif stage == 'valid':
             self.img_dir = self.args.valid_dir
         elif stage == 'test':
+            self.img_dir = self.args.test_dir
+        elif stage == 'predict':
             self.img_dir = self.args.test_dir
         else:
             assert f"No Such Stage. Your input -> {self.stage}"
@@ -120,10 +123,10 @@ class DataModule(pl.LightningDataModule):
             print("val: ", len(self.val))
 
         if stage == "test":
-            self.test = LPRNetDataset(self.args, stage)
+            self.test = LPRNetDataset(self.args, "test")
 
         if stage == "predict":
-            self.predict = LPRNetDataset(self.args, stage)
+            self.predict = LPRNetDataset(self.args, "predict")
 
     def train_dataloader(self):
         return DataLoader(self.train, 

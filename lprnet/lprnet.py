@@ -127,10 +127,7 @@ class _LPRNet(nn.Module):
 
 
 class LPRNet(pl.LightningModule):
-    def __init__(
-            self,
-            args
-    ):
+    def __init__(self, args):
         super().__init__()
         self.STNet = _STNet()
         self.LPRNet = _LPRNet(class_num=len(args.chars), dropout_rate=args.dropout_rate)
@@ -200,8 +197,10 @@ class LPRNet(pl.LightningModule):
         return predict
 
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam([{'params': self.STNet.parameters(), 'weight_decay': self.args.weight_decay},
-                                      {'params': self.LPRNet.parameters()}], lr=self.args.lr)
+        optimizer = torch.optim.Adam([{'params': self.STNet.parameters(),
+                                       'weight_decay': self.args.weight_decay},
+                                      {'params': self.LPRNet.parameters()}], 
+                                     lr=self.args.lr)
         scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, 10, 2, 0.0001, -1)
         return {"optimizer": optimizer,
                 "lr_scheduler": {

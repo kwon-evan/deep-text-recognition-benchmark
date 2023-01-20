@@ -1,5 +1,6 @@
 train_dir: '../datas/kor-plates/train/'
 valid_dir: '../datas/kor-plates/valid/'
+test_dir: '../datas/kor-plates/test/'
 saving_ckpt: 'saving_ckpt'
 img_size: !!python/tuple [100, 50]
 dropout_rate: 0.5

@@ -3,9 +3,9 @@ from argparse import Namespace
 from datetime import datetime
 import warnings
 import yaml
-import torch
+
 from pytorch_lightning import Trainer
-from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint, LearningRateMonitor, RichProgressBar
+from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint, LearningRateMonitor
 from pytorch_lightning.loggers.wandb import WandbLogger
 
 from lprnet.lprnet import LPRNet
@@ -16,8 +16,6 @@ warnings.filterwarnings("ignore")
 if __name__ == '__main__':
     with open('args.yaml') as f:
         args = Namespace(**yaml.load(f, Loader=yaml.FullLoader))
-
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     args.saving_ckpt += datetime.now().strftime("_%m-%d_%H:%M")
 
@@ -53,13 +51,12 @@ if __name__ == '__main__':
                 mode='min'
             ),
             LearningRateMonitor(logging_interval='step'),
-            RichProgressBar()
         ],
         precision=16,
-        accelerator="gpu",
+        accelerator="auto",
         # amp_backend="apex",
         devices=1,
-        logger=WandbLogger(project="LPRNet")
+        # logger=WandbLogger(project="LPRNet")
     )
 
     # Train

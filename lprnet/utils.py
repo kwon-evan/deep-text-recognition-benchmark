@@ -1,4 +1,5 @@
-from typing import List
+from typing import List, Sequence
+import torch
 import numpy as np
 
 
@@ -64,3 +65,29 @@ def accuracy(logits, labels, lengths, chars):
         total += 1
 
     return TP / total
+
+
+def tensor2numpy(inp):
+    # convert a Tensor to numpy image
+    inp = inp.squeeze(0).cpu()
+    inp = inp.detach().numpy().transpose((1, 2, 0))
+    inp = 127.5 + inp / 0.0078125
+    inp = inp.astype('uint8')
+
+    return inp
+
+
+def numpy2tensor(img: np.ndarray, img_size: Sequence[int]):
+    # convert a numpy image to tensor
+    import cv2
+    height, width = img.shape
+
+    if height != img_size[1] or width != img_size[0]:
+        img = cv2.resize(img, img_size, interpolation=cv2.INTER_CUBIC)
+    img = img.astype('float32')
+    img -= 127.5
+    img *= 0.0078125
+    img = np.transpose(img, (2, 0, 1))
+
+    return torch.from_numpy(img)
+
