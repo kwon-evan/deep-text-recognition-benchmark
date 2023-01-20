@@ -19,12 +19,13 @@ warnings.filterwarnings("ignore")
 
 
 if __name__ == '__main__':
-    with open('args.yaml') as f:
+    with open('config/kor_config.yaml') as f:
         args = Namespace(**yaml.load(f, Loader=yaml.FullLoader))
 
     load_model_start = time.time()
     lprnet = LPRNet(args)
-    lprnet.load_state_dict(torch.load('weights/lprnet_kor.pt'))
+    lprnet.load_state_dict(torch.load(args.pretrained))
+    lprnet.eval()
     print(f"Successful to build network in {time.time() - load_model_start}s")
 
     dm = DataModule(args)

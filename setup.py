@@ -4,7 +4,7 @@ setup(
     name="LPRNet",
     version="0.0.1",
     author="Heonjin Kwon",
-    author_email="kwon@4ind.com",
+    author_email="kwon@4ind.co.kr",
     description="A license plate recognition Module written in pytorch-lightning",
     keywords=['pytorch','pytorch-lightning', 'license-plate-recognition'],
     install_requires = [
