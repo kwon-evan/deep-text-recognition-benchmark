@@ -8,13 +8,13 @@ from pytorch_lightning import Trainer
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint, LearningRateMonitor
 from pytorch_lightning.loggers.wandb import WandbLogger
 
-from lprnet.lprnet import LPRNet
-from lprnet.datamodule import DataModule
+from lprnet import LPRNet
+from lprnet import DataModule
 
 warnings.filterwarnings("ignore")
 
 if __name__ == '__main__':
-    with open('config/kor_config.yaml') as f:
+    with open('config/idn_config.yaml') as f:
         args = Namespace(**yaml.load(f, Loader=yaml.FullLoader))
 
     args.saving_ckpt += datetime.now().strftime("_%m-%d_%H:%M")
@@ -36,19 +36,19 @@ if __name__ == '__main__':
         callbacks=[
              ModelCheckpoint(
                 dirpath=args.saving_ckpt,
+                monitor='val-loss',
+                mode='min',
                 filename='{epoch:02d}-{val-acc:.3f}',
                 verbose=True,
                 save_last=True,
                 save_top_k=5,
-                monitor='val-loss',
-                mode='min'
             ),
             EarlyStopping(
                 monitor='val-loss', 
+                mode='min',
                 min_delta=0.00, 
                 patience=100,
                 verbose=True,
-                mode='min'
             ),
             LearningRateMonitor(logging_interval='step'),
         ],
@@ -56,7 +56,7 @@ if __name__ == '__main__':
         accelerator="auto",
         # amp_backend="apex",
         devices=1,
-        # logger=WandbLogger(project="LPRNet")
+        logger=WandbLogger(project="LPRNet-IDN")
     )
 
     # Train

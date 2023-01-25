@@ -9,8 +9,7 @@ import yaml
 import torch
 from pytorch_lightning import Trainer
 
-from lprnet.lprnet import LPRNet
-from lprnet.datamodule import DataModule
+from lprnet import LPRNet, DataModule
 
 warnings.filterwarnings("ignore")
 
@@ -28,8 +27,8 @@ if __name__ == '__main__':
     dm = DataModule(args)
 
     trainer = Trainer(
-            accelerator="auto",
-            devices=torch.cuda.device_count(),
+        accelerator="auto",
+        devices=torch.cuda.device_count(),
     )
 
     since = time.time()
