@@ -3,6 +3,9 @@ Spatial Transformer + License Plate Recognition Network \
 A High Performance And Lightweight Korean License Plate Recognition.\
 Pytorch-Lightning Implementation for [sirius-ai/LPRNet_Pytorch](https://github.com/sirius-ai/LPRNet_Pytorch)
 
+## Performance
+* inference time: about 5ms at each plate
+
 # dependencies
 * pytorch-lightning>=1.7.0, <=1.9.0
 * numpy>=1.17.2, <1.24.1
