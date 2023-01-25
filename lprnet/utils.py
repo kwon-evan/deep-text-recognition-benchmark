@@ -80,7 +80,7 @@ def tensor2numpy(inp):
 def numpy2tensor(img: np.ndarray, img_size: Sequence[int]):
     # convert a numpy image to tensor
     import cv2
-    height, width = img.shape
+    height, width, _ = img.shape
 
     if height != img_size[1] or width != img_size[0]:
         img = cv2.resize(img, img_size, interpolation=cv2.INTER_CUBIC)

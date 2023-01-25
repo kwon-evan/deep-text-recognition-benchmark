@@ -1,3 +1,6 @@
+import numpy as np
+from cv2.cv2 import resize, INTER_LANCZOS4
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -213,9 +216,6 @@ class LPRNet(pl.LightningModule):
                 }}
 
     def detect(self, image, device):
-        import numpy as np
-        from cv2.cv2 import resize, INTER_LANCZOS4
-
         if all(image.shape):
             image = resize(image, self.args.img_size, interpolation=INTER_LANCZOS4)
             image = (np.transpose(np.float32(image), (2, 0, 1)) - 127.5) * 0.0078125
