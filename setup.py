@@ -10,10 +10,8 @@ setup(
     install_requires=[
         'pytorch-lightning>=1.7.0, <=1.9.0',
         'numpy>=1.17.1',
-        'torch>=1.10.0',
         'tqdm>=4.57.0',
         'PyYAML>=5.4',
-        'opencv-python>=3.0',
         'imutils>=0.4.0',
         'rich>=10.2.2'
     ],

@@ -7,7 +7,7 @@ from argparse import Namespace
 import warnings
 import yaml
 import torch
-from cv2 import cv2
+import cv2
 from rich import print
 from rich.progress import track
 from sklearn.metrics import accuracy_score

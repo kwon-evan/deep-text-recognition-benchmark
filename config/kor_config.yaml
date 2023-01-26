@@ -1,6 +1,6 @@
 train_dir: '../datas/kor-plates/train/'
 valid_dir: '../datas/kor-plates/valid/'
-test_dir: '../datas/kor-plates/test/'
+test_dir: 'test_imgs/'
 saving_ckpt: 'saving_ckpt'
 pretrained: 'weights/lprnet_kor.pt'
 img_size: !!python/tuple [100, 50]

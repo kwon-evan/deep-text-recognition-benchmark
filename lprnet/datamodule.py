@@ -3,7 +3,6 @@ import re
 import random
 import torch
 import numpy as np
-# from cv2 import cv2
 import cv2
 from torch.utils.data import Dataset, DataLoader
 from imutils import paths
