@@ -1,6 +1,6 @@
-train_dir: '../datas/kor-plates/train/'
-valid_dir: '../datas/kor-plates/valid/'
-test_dir: '../datas/kor-plates/test/'
+train_dir: '../datas/idn-plates/train/'
+valid_dir: '../datas/idn-plates/valid/'
+test_dir: '../datas/idn-plates/test/'
 saving_ckpt: 'saving_ckpt-idn'
 # pretrained: 'weights/lprnet_idn.pt'
 img_size: !!python/tuple [100, 50]
