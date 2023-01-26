@@ -18,7 +18,7 @@ warnings.filterwarnings("ignore")
 
 
 if __name__ == '__main__':
-    with open('config/kor_config.yaml') as f:
+    with open('config/idn_config.yaml') as f:
         args = Namespace(**yaml.load(f, Loader=yaml.FullLoader))
 
     load_model_start = time.time()

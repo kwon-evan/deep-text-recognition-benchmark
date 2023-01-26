@@ -8,6 +8,7 @@ import pytorch_lightning as pl
 
 from lprnet.utils import decode, accuracy
 
+
 def sparse_tuple_for_ctc(t_length, lengths):
     input_lengths = []
     target_lengths = []
@@ -101,7 +102,8 @@ class _LPRNet(nn.Module):
             nn.Mish(),
         )
         self.container = nn.Sequential(
-            nn.Conv2d(in_channels=256 + class_num + 128 + 64, out_channels=self.class_num, kernel_size=(1, 1), stride=(1, 1)),
+            nn.Conv2d(in_channels=256 + class_num + 128 + 64, out_channels=self.class_num, kernel_size=(1, 1),
+                      stride=(1, 1)),
         )
 
     def forward(self, x):
@@ -202,7 +204,7 @@ class LPRNet(pl.LightningModule):
     def configure_optimizers(self):
         optimizer = torch.optim.Adam([{'params': self.STNet.parameters(),
                                        'weight_decay': self.args.weight_decay},
-                                      {'params': self.LPRNet.parameters()}], 
+                                      {'params': self.LPRNet.parameters()}],
                                      lr=self.args.lr)
         scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, 10, 2, 0.0001, -1)
         return {"optimizer": optimizer,
@@ -214,4 +216,3 @@ class LPRNet(pl.LightningModule):
                     "strict": True,
                     "name": "lr"
                 }}
-
