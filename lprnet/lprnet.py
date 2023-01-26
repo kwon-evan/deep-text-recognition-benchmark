@@ -1,5 +1,5 @@
 import numpy as np
-from cv2.cv2 import resize, INTER_LANCZOS4
+from cv2 import resize, INTER_LANCZOS4
 
 import torch
 import torch.nn as nn
