@@ -115,7 +115,7 @@ class DataModule(pl.LightningDataModule):
         super().__init__()
         self.args = args
         print("dm loaded")
-        print(self.args)
+        # print(self.args)
 
     def setup(self, stage: str):
         if stage == "fit":

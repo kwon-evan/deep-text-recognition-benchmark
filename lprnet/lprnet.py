@@ -1,5 +1,7 @@
 import numpy as np
-from cv2.cv2 import resize, INTER_LANCZOS4
+from typing import Optional
+from argparse import Namespace
+from cv2 import resize, INTER_LANCZOS4
 
 import torch
 import torch.nn as nn
@@ -132,11 +134,11 @@ class _LPRNet(nn.Module):
 
 
 class LPRNet(pl.LightningModule):
-    def __init__(self, args):
+    def __init__(self, args: Optional[Namespace] = None):
         super().__init__()
+        self.save_hyperparameters(args)
         self.STNet = _STNet()
-        self.LPRNet = _LPRNet(class_num=len(args.chars), dropout_rate=args.dropout_rate)
-        self.args = args
+        self.LPRNet = _LPRNet(class_num=len(self.hparams.chars), dropout_rate=self.hparams.dropout_rate)
 
     def forward(self, x):
         return self.LPRNet(self.STNet(x))
@@ -148,13 +150,13 @@ class LPRNet(pl.LightningModule):
         logits = self(imgs)
         log_probs = logits.permute(2, 0, 1)
         log_probs = log_probs.log_softmax(2).requires_grad_()
-        input_lengths, target_lengths = sparse_tuple_for_ctc(self.args.t_length, lengths)
+        input_lengths, target_lengths = sparse_tuple_for_ctc(self.hparams.t_length, lengths)
         loss = F.ctc_loss(log_probs=log_probs, targets=labels,
                           input_lengths=input_lengths, target_lengths=target_lengths,
-                          blank=len(self.args.chars) - 1, reduction='mean')
-        acc = accuracy(logits, labels, lengths, self.args.chars)
+                          blank=len(self.hparams.chars) - 1, reduction='mean')
+        acc = accuracy(logits, labels, lengths, self.hparams.chars)
 
-        self.log("train-loss", loss, prog_bar=True, logger=True, sync_dist=True)
+        self.log("train-loss", abs(loss), prog_bar=True, logger=True, sync_dist=True)
         self.log("train-acc", acc, prog_bar=True, logger=True, sync_dist=True)
 
         return loss
@@ -165,13 +167,13 @@ class LPRNet(pl.LightningModule):
         logits = self(imgs)
         log_probs = logits.permute(2, 0, 1)
         log_probs = log_probs.log_softmax(2).requires_grad_()
-        input_lengths, target_lengths = sparse_tuple_for_ctc(self.args.t_length, lengths)
+        input_lengths, target_lengths = sparse_tuple_for_ctc(self.hparams.t_length, lengths)
         loss = F.ctc_loss(log_probs=log_probs, targets=labels,
                           input_lengths=input_lengths, target_lengths=target_lengths,
-                          blank=len(self.args.chars) - 1, reduction='mean')
-        acc = accuracy(logits, labels, lengths, self.args.chars)
+                          blank=len(self.hparams.chars) - 1, reduction='mean')
+        acc = accuracy(logits, labels, lengths, self.hparams.chars)
 
-        self.log("val-loss", loss, prog_bar=True, logger=True, sync_dist=True)
+        self.log("val-loss", abs(loss), prog_bar=True, logger=True, sync_dist=True)
         self.log("val-acc", acc, prog_bar=True, logger=True, sync_dist=True)
 
     def test_step(self, batch, batch_idx):
@@ -181,14 +183,14 @@ class LPRNet(pl.LightningModule):
         logits = self(imgs)
         log_probs = logits.permute(2, 0, 1)
         log_probs = log_probs.log_softmax(2).requires_grad_()
-        input_lengths, target_lengths = sparse_tuple_for_ctc(self.args.t_length, lengths)
+        input_lengths, target_lengths = sparse_tuple_for_ctc(self.hparams.t_length, lengths)
         loss = F.ctc_loss(log_probs=log_probs, targets=labels,
                           input_lengths=input_lengths, target_lengths=target_lengths,
-                          blank=len(self.args.chars) - 1, reduction='mean')
-        acc = accuracy(logits, labels, lengths, self.args.chars)
+                          blank=len(self.hparams.chars) - 1, reduction='mean')
+        acc = accuracy(logits, labels, lengths, self.hparams.chars)
         end = time.time()
 
-        self.log("test-loss", loss, prog_bar=True, logger=True, sync_dist=True)
+        self.log("test-loss", abs(loss), prog_bar=True, logger=True, sync_dist=True)
         self.log("test-acc", acc, prog_bar=True, logger=True, sync_dist=True)
         self.log("test-time", end - start, prog_bar=True, logger=True, sync_dist=True)
 
@@ -197,15 +199,15 @@ class LPRNet(pl.LightningModule):
 
         logits = self(imgs)
         preds = logits.cpu().detach().numpy()  # (batch size, 68, 18)
-        predict, _ = decode(preds, self.args.chars)  # list of predict output
+        predict, _ = decode(preds, self.chars)  # list of predict output
 
         return predict
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam([{'params': self.STNet.parameters(),
-                                       'weight_decay': self.args.weight_decay},
+                                       'weight_decay': self.hparams.weight_decay},
                                       {'params': self.LPRNet.parameters()}],
-                                     lr=self.args.lr)
+                                     lr=self.hparams.lr)
         scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, 10, 2, 0.0001, -1)
         return {"optimizer": optimizer,
                 "lr_scheduler": {
