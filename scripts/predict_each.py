@@ -12,7 +12,7 @@ import numpy as np
 from rich import print
 from PIL import Image
 
-from LPRNet import Model
+from lprnet import Model
 
 warnings.filterwarnings(action='ignore')
 

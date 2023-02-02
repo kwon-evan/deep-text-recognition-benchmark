@@ -13,8 +13,8 @@ import numpy as np
 import pandas as pd
 from rich import print
 
-from LPRNet import Model
-from LPRNet import LMDBDataModule
+from lprnet import Model
+from lprnet import LMDBDataModule
 
 warnings.filterwarnings(action='ignore')
 

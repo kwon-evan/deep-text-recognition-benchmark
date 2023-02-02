@@ -13,8 +13,8 @@ from pytorch_lightning.callbacks import RichProgressBar, ModelCheckpoint, EarlyS
 import numpy as np
 from rich import print
 
-from LPRNet import Model
-from LPRNet import LMDBDataModule
+from lprnet import Model
+from lprnet import LMDBDataModule
 
 warnings.filterwarnings(action='ignore')
 

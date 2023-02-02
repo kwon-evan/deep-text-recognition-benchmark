@@ -1,7 +1,7 @@
 from torch.utils.data import DataLoader
 import pytorch_lightning as pl
 
-from LPRNet.dataset import hierarchical_dataset, AlignCollate, RawDataset
+from lprnet.dataset import hierarchical_dataset, AlignCollate, RawDataset
 
 
 class LMDBDataModule(pl.LightningDataModule):

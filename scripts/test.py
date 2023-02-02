@@ -12,8 +12,8 @@ import pytorch_lightning as pl
 import numpy as np
 from rich import print
 
-from LPRNet import Model
-from LPRNet import LMDBDataModule
+from lprnet import Model
+from lprnet import LMDBDataModule
 
 warnings.filterwarnings(action='ignore')
 

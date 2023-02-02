@@ -9,7 +9,7 @@ from rich import print
 from PIL import Image
 import torchvision.transforms as transforms
 
-from LPRNet import Model
+from lprnet import Model
 
 warnings.filterwarnings(action='ignore')
 

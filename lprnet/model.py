@@ -24,11 +24,11 @@ import torch.nn.init as init
 import pytorch_lightning as pl
 from nltk.metrics.distance import edit_distance
 
-from LPRNet.utils import CTCLabelConverter, AttnLabelConverter
-from LPRNet.modules.transformation import TPS_SpatialTransformerNetwork
-from LPRNet.modules.feature_extraction import VGG_FeatureExtractor, RCNN_FeatureExtractor, ResNet_FeatureExtractor
-from LPRNet.modules.sequence_modeling import BidirectionalLSTM
-from LPRNet.modules.prediction import Attention
+from lprnet.utils import CTCLabelConverter, AttnLabelConverter
+from lprnet.modules.transformation import TPS_SpatialTransformerNetwork
+from lprnet.modules.feature_extraction import VGG_FeatureExtractor, RCNN_FeatureExtractor, ResNet_FeatureExtractor
+from lprnet.modules.sequence_modeling import BidirectionalLSTM
+from lprnet.modules.prediction import Attention
 
 
 class Model(pl.LightningModule):
