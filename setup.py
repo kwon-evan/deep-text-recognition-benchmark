@@ -2,18 +2,19 @@ from setuptools import setup, find_packages
 
 setup(
     name="LPRNet",
-    version="0.0.1",
+    version="0.0.2",
     author="Heonjin Kwon",
     author_email="kwon@4ind.co.kr",
-    description="A license plate recognition Module written in pytorch-lightning",
+    description="A Package for license plate recognition written in pytorch-lightning",
     keywords=['pytorch', 'pytorch-lightning', 'license-plate-recognition'],
     install_requires=[
         'pytorch-lightning>=1.7.0, <=1.9.0',
         'numpy>=1.17.1',
-        'tqdm>=4.57.0',
-        'PyYAML>=5.4',
-        'imutils>=0.4.0',
-        'rich>=10.2.2'
+        # 'imutils>=0.4.0',
+        'natsort==8.2.0',
+        'lmdb==1.4.0',
+        'Pillow==9.4.0',
+        'nltk==3.8.1'
     ],
     packages=find_packages(),
     classifiers=[ 
