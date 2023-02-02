@@ -15,12 +15,13 @@ warnings.filterwarnings("ignore")
 
 
 if __name__ == '__main__':
-    with open('config/kor_config.yaml') as f:
+    with open('config/idn_config.yaml') as f:
         args = Namespace(**yaml.load(f, Loader=yaml.FullLoader))
 
     load_model_start = time.time()
     lprnet = LPRNet(args)
-    lprnet.load_state_dict(torch.load(args.pretrained))
+    # lprnet.load_state_dict(torch.load(args.pretrained))
+    lprnet.load_from_checkpoint(args.pretrained)
     lprnet.eval()
     print(f"Successful to build network in {time.time() - load_model_start}s")
 
@@ -28,6 +29,7 @@ if __name__ == '__main__':
 
     trainer = Trainer(
         accelerator="auto",
+        precision=16,
         devices=torch.cuda.device_count(),
     )
 

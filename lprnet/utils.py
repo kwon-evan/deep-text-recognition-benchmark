@@ -15,11 +15,12 @@ def encode(imgname: str, chars: List[str]):
 
         if imgname[i:j] in chars:
             label.append(chars_dict[imgname[i:j]])
-            i=j
+            i = j
         else:
             assert 0, f'no such char in {imgname}'
 
     return label
+
 
 def decode(preds, chars):
     # greedy decode
@@ -32,8 +33,7 @@ def decode(preds, chars):
             pred_label.append(np.argmax(pred[:, j], axis=0))
         no_repeat_blank_label = list()
         pre_c = ''
-        # pre_c = pred_label[0]
-        for c in pred_label:  # dropout repeate label and blank label
+        for c in pred_label:  # dropout repeated label and blank label
             if (pre_c == c) or (c == len(chars) - 1):
                 if c == len(chars) - 1:
                     pre_c = c
@@ -90,4 +90,3 @@ def numpy2tensor(img: np.ndarray, img_size: Sequence[int]):
     img = np.transpose(img, (2, 0, 1))
 
     return torch.from_numpy(img)
-

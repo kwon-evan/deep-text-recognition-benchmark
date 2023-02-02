@@ -23,6 +23,7 @@ if __name__ == '__main__':
         os.mkdir(args.saving_ckpt)
 
     lprn = LPRNet(args)
+    print(lprn.hparams)
     print("Model loaded")
 
     # Set Data Module
@@ -31,21 +32,19 @@ if __name__ == '__main__':
     # Set Trainer
     trainer = Trainer.from_argparse_args(
         args,
-        # auto_lr_find=True,
-        # auto_scale_batch_size="binsearch",
         callbacks=[
              ModelCheckpoint(
                 dirpath=args.saving_ckpt,
-                monitor='val-loss',
-                mode='min',
+                monitor='val-acc',
+                mode='max',
                 filename='{epoch:02d}-{val-acc:.3f}',
                 verbose=True,
                 save_last=True,
                 save_top_k=5,
             ),
             EarlyStopping(
-                monitor='val-loss', 
-                mode='min',
+                monitor='val-acc', 
+                mode='max',
                 min_delta=0.00, 
                 patience=100,
                 verbose=True,
