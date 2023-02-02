@@ -1,7 +1,7 @@
 import numpy as np
+from cv2 import resize, INTER_LANCZOS4
 from typing import Optional
 from argparse import Namespace
-from cv2 import resize, INTER_LANCZOS4
 
 import torch
 import torch.nn as nn

@@ -14,7 +14,7 @@ from lprnet import DataModule
 warnings.filterwarnings("ignore")
 
 if __name__ == '__main__':
-    with open('config/idn_config.yaml') as f:
+    with open('config/kor_config.yaml') as f:
         args = Namespace(**yaml.load(f, Loader=yaml.FullLoader))
 
     args.saving_ckpt += datetime.now().strftime("_%m-%d_%H:%M")
