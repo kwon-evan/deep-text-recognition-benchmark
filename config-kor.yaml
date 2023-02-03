@@ -1,0 +1,41 @@
+### Training Configuration ###
+exp_name               :                                        # Where to store logs and models
+train_data             : korean_dataset/train/               # path to train dataset
+valid_data             : korean_dataset/valid/               # path to valid dataset
+test_data              : korean_dataset/test/                # path to test dataset
+image_folder           : demo_images/                           # path to image folder for predict
+manualSeed             : 1112                                   # for random seed setting
+workers                : 24                                     # number of data loading workers
+batch_size             : 1024                                   # input batch size
+num_epoch              : 100                                    # number of iterations to train for
+saved_model            : saved_models/TPS-ResNet-BiLSTM-Attn-Seed1112/epoch=65-val-acc=96.247.ckpt                 # path to model to continue training
+FT                     : false                                  # whether to do fine-tuning
+adam                   : false                                  # Whether to use adam (default is Adadelta)
+lr                     : 1                                      # learning rate, default=1.0 for Adadelta
+beta1                  : 0.9                                    #beta1 for adam. default=0.9
+rho                    : 0.95                                   # decay rate rho for Adadelta. default=0.95
+eps                    : .00000001                              # eps for Adadelta. default=1e-8
+grad_clip              : 5                                      # gradient clipping value. default=5
+
+### Data processing ###
+select_data            : '/'                                    # select training data (default is MJ-ST, which means MJ and ST used as training data)
+batch_ratio            : '1'                                    # assign ratio for each selected data in the batch
+total_data_usage_ratio : 1.0                                    # total data usage ratio, this ratio is multiplied to total number of data.
+batch_max_length       : 10                                     # maximum-label-length
+imgH                   : 32                                     # the height of the input image
+imgW                   : 100                                    # the width of the input image
+rgb                    : true                                   # use rgb input
+character              : '0123456789가강거경계고관광구금기김나남너노누다대더도동두등라러로루리마머명모무문미바배버보부북사산서소수시아악안양어연영오용우울원육이인자작저전조주중지차천초추충카타파평포하허호홀히' # character label
+sensitive              : false                                  # for sensitive character mode
+PAD                    : false                                  # whether to keep ratio then pad for image resize
+data_filtering_off     : false                                  # for data_filtering_off mode
+
+### Model Architecture ###
+Transformation         : TPS                                    # Transformation stage. None|TPS
+FeatureExtraction      : ResNet                                 # FeatureExtraction stage. VGG|RCNN|ResNet
+SequenceModeling       : BiLSTM                                 # SequenceModeling stage. None|BiLSTM
+Prediction             : Attn                                   # Prediction stage. CTC|Attn
+num_fiducial           : 20                                     # number of fiducial points of TPS-STN
+input_channel          : 1                                      # the number of input channel of Feature extractor
+output_channel         : 512                                    # the number of output channel of Feature extractor
+hidden_size            : 256                                    # the size of the LSTM hidden state

@@ -22,13 +22,15 @@ def predict(opt):
 
     model = Model.load_from_checkpoint(opt.saved_model, opt=opt)
     model.eval().to(device)
+    model.freeze()
     print(f'model loaded from checkpoint {opt.saved_model}')
 
     print(model.hparams)
 
-
-    for img_name in os.listdir('demo_images'):
-        img = Image.open(f'demo_images/{img_name}')
+    # IMAGE_FOLDER = '/home/fourind/projects/datas/kor-plates/test'
+    IMAGE_FOLDER = 'demo_images'
+    for img_name in os.listdir(IMAGE_FOLDER):
+        img = Image.open(f'{IMAGE_FOLDER}/{img_name}')
         label = img_name.split('.')[0].split('-')[0]
 
         pred, conf, time = model.imread(img, device)
@@ -45,7 +47,7 @@ def predict(opt):
 
 if __name__ == '__main__':
     """ load configuration """
-    with open('config.yaml', 'r') as f:
+    with open('config-idn.yaml', 'r') as f:
         opt = yaml.safe_load(f)
         opt = Namespace(**opt)
 

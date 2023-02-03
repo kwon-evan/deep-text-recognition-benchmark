@@ -465,4 +465,3 @@ class Model(pl.LightningModule):
         end_time = time.time()
 
         return pred.upper(), confidence_score.item(), (end_time - start_time) * 1000
-

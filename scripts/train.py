@@ -62,7 +62,7 @@ def train(opt):
 
 if __name__ == '__main__':
     """ load configuration """
-    with open('config.yaml', 'r') as f:
+    with open('config-idn.yaml', 'r') as f:
         opt = yaml.safe_load(f)
         print(opt)
         opt = Namespace(**opt)

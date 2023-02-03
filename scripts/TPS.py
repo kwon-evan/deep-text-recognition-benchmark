@@ -21,8 +21,11 @@ def TPS(opt):
     model.eval().to(device)
     print(f'model loaded from checkpoint {opt.saved_model}')
 
-    for img_name in sorted(os.listdir('demo_images')):
-        image = Image.open(f'demo_images/{img_name}')
+    # IMAGE_FOLDER = '/home/fourind/projects/datas/kor-plates/test'
+    IMAGE_FOLDER = 'demo_images'
+    for img_name in sorted(os.listdir(IMAGE_FOLDER)):
+        image = Image.open(f'{IMAGE_FOLDER}/{img_name}')
+        image_size = image.size
         label = img_name.split('.')[0].split('-')[0]
 
         to_tensor = transforms.ToTensor()
@@ -38,14 +41,14 @@ def TPS(opt):
 
         warped = warped.squeeze(0)
         warped = to_pil(warped)
-        warped = warped.resize((512, 200), Image.ANTIALIAS)
+        warped = warped.resize(image_size, Image.ANTIALIAS)
         rename = img_name.split('.')[0] + '-warped.jpg'
-        warped.save(f'demo_images/{rename}', dpi=(200, 200))
+        warped.save(f'{IMAGE_FOLDER}/{rename}', dpi=(200, 200))
 
 
 if __name__ == '__main__':
     """ load configuration """
-    with open('config.yaml', 'r') as f:
+    with open('config-idn.yaml', 'r') as f:
         opt = yaml.safe_load(f)
         opt = Namespace(**opt)
 
