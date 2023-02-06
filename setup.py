@@ -14,7 +14,13 @@ setup(
         'natsort==8.2.0',
         'lmdb==1.4.0',
         'Pillow==9.4.0',
-        'nltk==3.8.1'
+        'nltk==3.8.1',
+        'multidict',
+        'attrs',
+        'yarl',
+        'idna_ssl',
+        'charset_normalizer',
+        'aiosignal',
     ],
     packages=find_packages(),
     classifiers=[ 
