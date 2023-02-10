@@ -8,13 +8,12 @@ setup(
     description="A Package for license plate recognition written in pytorch-lightning",
     keywords=['pytorch', 'pytorch-lightning', 'license-plate-recognition'],
     install_requires=[
+        # LPRNet requirements
         'pytorch-lightning>=1.7.0, <=1.9.0',
         'numpy>=1.17.1',
-        # 'imutils>=0.4.0',
-        'natsort==8.2.0',
-        'lmdb==1.4.0',
         'Pillow==9.4.0',
         'nltk==3.8.1',
+        # 'imutils>=0.4.0',
         'multidict',
         'attrs',
         'yarl',
