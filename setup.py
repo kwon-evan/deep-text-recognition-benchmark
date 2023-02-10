@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="LPRNet",
-    version="0.0.2",
+    version="0.0.3",
     author="Heonjin Kwon",
     author_email="kwon@4ind.co.kr",
     description="A Package for license plate recognition written in pytorch-lightning",
