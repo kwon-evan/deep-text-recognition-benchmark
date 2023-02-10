@@ -1,10 +1,10 @@
 from torch.utils.data import DataLoader
 import pytorch_lightning as pl
 
-from lprnet.dataset import hierarchical_dataset, AlignCollate, RawDataset
+from lprnet.dataset import AlignCollate, RawDataset
 
 
-class LMDBDataModule(pl.LightningDataModule):
+class DataModule(pl.LightningDataModule):
     def __init__(self, opt):
         super().__init__()
         self.opt = opt
@@ -21,11 +21,11 @@ class LMDBDataModule(pl.LightningDataModule):
 
     def setup(self, stage: str) -> None:
         if stage == 'fit':
-            self.train_dataset, _ = hierarchical_dataset(root=self.opt.train_data, opt=self.opt)
-            self.valid_dataset, _ = hierarchical_dataset(root=self.opt.valid_data, opt=self.opt)
+            self.train_dataset = RawDataset(root=self.opt.train_data, opt=self.opt)
+            self.valid_dataset = RawDataset(root=self.opt.valid_data, opt=self.opt)
 
         if stage == 'test':
-            self.test_dataset, _ = hierarchical_dataset(root=self.opt.test_data, opt=self.opt)
+            self.test_dataset = RawDataset(root=self.opt.test_data, opt=self.opt)
 
         if stage == 'predict':
             self.predict_dataset = RawDataset(root=self.opt.image_folder, opt=self.opt)

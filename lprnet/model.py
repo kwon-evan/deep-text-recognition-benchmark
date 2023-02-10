@@ -180,6 +180,7 @@ class Model(pl.LightningModule):
         image_tensors, labels = batch
         batch_size = image_tensors.size(0)
         image = image_tensors
+
         # For max length prediction
         length_for_pred = torch.IntTensor([self.opt.batch_max_length] * batch_size)
         text_for_pred = torch.LongTensor(batch_size, self.opt.batch_max_length + 1).fill_(0)
@@ -429,7 +430,7 @@ class Model(pl.LightningModule):
         image = totensor(image).to(device)
         image.sub_(0.5).div_(0.5)
         image = image.unsqueeze(0)
-        
+    
         # For max length prediction
         length_for_pred = torch.IntTensor([self.opt.batch_max_length])
         text_for_pred = torch.LongTensor(1, self.opt.batch_max_length + 1).fill_(0)
