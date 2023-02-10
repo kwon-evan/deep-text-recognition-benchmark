@@ -9,6 +9,7 @@ import torch
 import torch.backends.cudnn as cudnn
 import torch.utils.data
 import numpy as np
+import pandas as pd
 from rich import print
 from PIL import Image
 
@@ -22,27 +23,35 @@ def predict(opt):
 
     model = Model.load_from_checkpoint(opt.saved_model, opt=opt)
     model.eval().to(device)
-    model.freeze()
+    # model.freeze()
     print(f'model loaded from checkpoint {opt.saved_model}')
 
     print(model.hparams)
 
     # IMAGE_FOLDER = '/home/fourind/projects/datas/kor-plates/test'
-    IMAGE_FOLDER = 'demo_images'
+    IMAGE_FOLDER = 'demo_images/'
+    result = {
+        'img_names': [],
+        'labels': [],
+        'preds': [],
+        'confs': [],
+        'times': [],
+        'acc': []
+    }
     for img_name in os.listdir(IMAGE_FOLDER):
         img = Image.open(f'{IMAGE_FOLDER}/{img_name}')
         label = img_name.split('.')[0].split('-')[0]
 
         pred, conf, time = model.imread(img, device)
-        print(f'''
-        ------------------------
-        label: {label}
-        pred : {pred}
-        correct : {label==pred}
-        conf : {conf:.5f}
-        time : {time:.5f} ms
-        ------------------------
-        ''')
+        result['img_names'].append(img_name)
+        result['labels'].append(label)
+        result['preds'].append(pred)
+        result['confs'].append(conf)
+        result['times'].append(time)
+        result['acc'].append(label==pred)
+
+    df = pd.DataFrame(result)
+    print(df)
 
 
 if __name__ == '__main__':
@@ -55,8 +64,6 @@ if __name__ == '__main__':
         opt.exp_name = f'{opt.Transformation}-{opt.FeatureExtraction}-{opt.SequenceModeling}-{opt.Prediction}'
         opt.exp_name += f'-Seed{opt.manualSeed}'
         # print(opt.exp_name)
-
-    os.makedirs(f'./saved_models/{opt.exp_name}', exist_ok=True)
 
     """ vocab / character number configuration """
     if opt.sensitive:

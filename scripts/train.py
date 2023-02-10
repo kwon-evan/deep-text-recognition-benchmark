@@ -10,16 +10,17 @@ import torch.backends.cudnn as cudnn
 import torch.utils.data
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import RichProgressBar, ModelCheckpoint, EarlyStopping, DeviceStatsMonitor
+from pytorch_lightning.loggers.wandb import WandbLogger
 import numpy as np
 from rich import print
 
 from lprnet import Model
-from lprnet import LMDBDataModule
+from lprnet import DataModule
 
 warnings.filterwarnings(action='ignore')
 
 def train(opt):
-    dm = LMDBDataModule(opt)
+    dm = DataModule(opt)
     model = Model(opt)
 
     if opt.saved_model != '':
@@ -51,10 +52,11 @@ def train(opt):
                 monitor='val-ned',
                 mode='max',
                 min_delta=0.00,
-                patience=10,
+                patience=30,
                 verbose=True,
             ),
-        ]
+        ],
+        logger=WandbLogger(project="LPRNet")
     )
 
     trainer.fit(model, dm)

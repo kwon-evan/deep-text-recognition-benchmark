@@ -13,7 +13,7 @@ import numpy as np
 from rich import print
 
 from lprnet import Model
-from lprnet import LMDBDataModule
+from lprnet import DataModule
 
 warnings.filterwarnings(action='ignore')
 
@@ -21,7 +21,7 @@ def test(opt):
     if opt.saved_model == '' or os.path.exists(opt.saved_model):
         assert f'{opt.saved_model} is not exist!'
 
-    dm = LMDBDataModule(opt)
+    dm = DataModule(opt)
     print("Loding Saved:", opt.saved_model)
     print(os.path.exists(opt.saved_model))
     model = Model.load_from_checkpoint(opt.saved_model, opt=opt)
