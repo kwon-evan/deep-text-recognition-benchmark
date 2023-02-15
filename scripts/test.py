@@ -15,23 +15,24 @@ from rich import print
 from lprnet import Model
 from lprnet import DataModule
 
-warnings.filterwarnings(action='ignore')
+warnings.filterwarnings(action="ignore")
+
 
 def test(opt):
-    if opt.saved_model == '' or os.path.exists(opt.saved_model):
-        assert f'{opt.saved_model} is not exist!'
+    if opt.saved_model == "" or os.path.exists(opt.saved_model):
+        assert f"{opt.saved_model} is not exist!"
 
     dm = DataModule(opt)
     print("Loding Saved:", opt.saved_model)
     print(os.path.exists(opt.saved_model))
     model = Model.load_from_checkpoint(opt.saved_model, opt=opt)
     model.eval()
-    print(f'model loaded from checkpoint {opt.saved_model}')
+    print(f"model loaded from checkpoint {opt.saved_model}")
 
     print(model.hparams)
 
     trainer = pl.Trainer(
-        accelerator='auto',
+        accelerator="auto",
         devices=opt.num_gpu,
         precision=16,
     )
@@ -41,18 +42,18 @@ def test(opt):
     print(test_result)
 
 
-if __name__ == '__main__':
-    """ load configuration """
-    with open('config-idn.yaml', 'r') as f:
+if __name__ == "__main__":
+    """load configuration"""
+    with open("config-idn.yaml", "r") as f:
         opt = yaml.safe_load(f)
         opt = Namespace(**opt)
 
     if not opt.exp_name:
-        opt.exp_name = f'{opt.Transformation}-{opt.FeatureExtraction}-{opt.SequenceModeling}-{opt.Prediction}'
-        opt.exp_name += f'-Seed{opt.manualSeed}'
+        opt.exp_name = f"{opt.Transformation}-{opt.FeatureExtraction}-{opt.SequenceModeling}-{opt.Prediction}"
+        opt.exp_name += f"-Seed{opt.manualSeed}"
         # print(opt.exp_name)
 
-    os.makedirs(f'./saved_models/{opt.exp_name}', exist_ok=True)
+    os.makedirs(f"./saved_models/{opt.exp_name}", exist_ok=True)
 
     """ vocab / character number configuration """
     if opt.sensitive:

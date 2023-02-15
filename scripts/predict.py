@@ -18,6 +18,7 @@ from lprnet import DataModule
 
 warnings.filterwarnings(action='ignore')
 
+
 def predict(opt):
     if opt.saved_model == '' or os.path.exists(opt.saved_model):
         assert f'{opt.saved_model} is not exist!'
@@ -39,15 +40,16 @@ def predict(opt):
 
     predict_result = [pred for pred in predict_result[0]]
     predict_df = pd.DataFrame([(img_name,
-                                    img_name.split('.jpg')[0].split('-')[0],
-                                    pred.upper(),
-                                    conf) for img_name, pred, conf in predict_result],
-                                  columns=['img_name', 'label', 'pred', 'conf'])
+                                img_name.split('.jpg')[0].split('-')[0],
+                                pred.upper(),
+                                conf) for img_name, pred, conf in predict_result],
+                              columns=['img_name', 'label', 'pred', 'conf'])
     predict_df['correct'] = predict_df.apply(lambda x: x.label == x.pred, axis=1)
     predict_df.to_csv('predict_result.csv', index=False)
     failures = predict_df.loc[predict_df['correct'] == False]
     failures.to_csv('predict_failures.csv', index=False)
     print('Accuracy:', (len(predict_df) - len(failures)) / len(predict_df) * 100)
+
 
 if __name__ == '__main__':
     """ load configuration """

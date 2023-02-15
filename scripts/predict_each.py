@@ -17,6 +17,7 @@ from lprnet import Model
 
 warnings.filterwarnings(action='ignore')
 
+
 def predict(opt):
     if opt.saved_model == '' or os.path.exists(opt.saved_model):
         assert f'{opt.saved_model} is not exist!'
@@ -48,7 +49,7 @@ def predict(opt):
         result['preds'].append(pred)
         result['confs'].append(conf)
         result['times'].append(time)
-        result['acc'].append(label==pred)
+        result['acc'].append(label == pred)
 
     df = pd.DataFrame(result)
     print(df)

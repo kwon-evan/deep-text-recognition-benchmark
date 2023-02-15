@@ -9,7 +9,13 @@ import torch
 import torch.backends.cudnn as cudnn
 import torch.utils.data
 import pytorch_lightning as pl
-from pytorch_lightning.callbacks import RichProgressBar, ModelCheckpoint, EarlyStopping, DeviceStatsMonitor
+from pytorch_lightning.callbacks import (
+    RichProgressBar,
+    ModelCheckpoint,
+    EarlyStopping,
+    DeviceStatsMonitor,
+    StochasticWeightAveraging,
+)
 from pytorch_lightning.loggers.wandb import WandbLogger
 import numpy as np
 from rich import print
@@ -17,21 +23,22 @@ from rich import print
 from lprnet import Model
 from lprnet import DataModule
 
-warnings.filterwarnings(action='ignore')
+warnings.filterwarnings(action="ignore")
+
 
 def train(opt):
     dm = DataModule(opt)
     model = Model(opt)
 
-    if opt.saved_model != '':
+    if opt.saved_model != "":
         try:
             model.load_from_checkpoint(opt.saved_model)
-            print(f'continue to train, from {opt.saved_model}')
+            print(f"continue to train, from {opt.saved_model}")
         except:
             pass
 
     trainer = pl.Trainer(
-        accelerator='auto',
+        accelerator="auto",
         devices=opt.num_gpu,
         gradient_clip_val=opt.grad_clip,
         precision=16,
@@ -40,41 +47,42 @@ def train(opt):
             RichProgressBar(),
             DeviceStatsMonitor(),
             ModelCheckpoint(
-                dirpath=f'./saved_models/{opt.exp_name}',
-                monitor='val-ned',
-                mode='max',
-                filename='{epoch:02d}-{val-acc:.3f}',
+                dirpath=f"./saved_models/{opt.exp_name}",
+                monitor="val-ned",
+                mode="max",
+                filename="{epoch:02d}-{val-acc:.3f}",
                 verbose=True,
                 save_last=True,
-                save_top_k=5
+                save_top_k=5,
             ),
             EarlyStopping(
-                monitor='val-ned',
-                mode='max',
+                monitor="val-ned",
+                mode="max",
                 min_delta=0.00,
                 patience=30,
                 verbose=True,
             ),
+            StochasticWeightAveraging(swa_lrs=0.01, swa_epoch_start=30),
         ],
-        logger=WandbLogger(project="LPRNet")
+        logger=WandbLogger(project="LPRNet"),
     )
 
     trainer.fit(model, dm)
 
 
-if __name__ == '__main__':
-    """ load configuration """
-    with open('config-idn.yaml', 'r') as f:
+if __name__ == "__main__":
+    """load configuration"""
+    with open("config-idn.yaml", "r") as f:
         opt = yaml.safe_load(f)
         print(opt)
         opt = Namespace(**opt)
 
     if not opt.exp_name:
-        opt.exp_name = f'{opt.Transformation}-{opt.FeatureExtraction}-{opt.SequenceModeling}-{opt.Prediction}'
-        opt.exp_name += f'-Seed{opt.manualSeed}'
+        opt.exp_name = f"{opt.Transformation}-{opt.FeatureExtraction}-{opt.SequenceModeling}-{opt.Prediction}"
+        opt.exp_name += f"-Seed{opt.manualSeed}"
         # print(opt.exp_name)
 
-    os.makedirs(f'./saved_models/{opt.exp_name}', exist_ok=True)
+    os.makedirs(f"./saved_models/{opt.exp_name}", exist_ok=True)
 
     """ vocab / character number configuration """
     if opt.sensitive:
