@@ -14,6 +14,9 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 
+
+import os
+import yaml
 import re
 import numpy as np
 import torch
@@ -21,8 +24,11 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import torch.nn.init as init
+import torch.backends.cudnn as cudnn
 import pytorch_lightning as pl
 from nltk.metrics.distance import edit_distance
+from typing import Tuple
+from argparse import Namespace
 
 from lprnet.utils import CTCLabelConverter, AttnLabelConverter
 from lprnet.modules.transformation import TPS_SpatialTransformerNetwork
@@ -573,3 +579,49 @@ class Model(pl.LightningModule):
         end_time = time.time()
 
         return pred.upper(), confidence_score.item(), (end_time - start_time) * 1000
+
+
+def load_LPRNet(yaml_path: str) -> Tuple[Model, Namespace]:
+    """
+    Load LPRNet model from yaml file
+    :param yaml_path: path to yaml file
+    :return: loaded LPRNet model, Namespace object with model parameters
+    """
+
+    # load configuration
+    with open(yaml_path, "r") as f:
+        opt = yaml.safe_load(f)
+        opt = Namespace(**opt)
+        print(f"Configuration loaded from {yaml_path}")
+
+    # set experiment name if not exists
+    if not opt.exp_name:
+        opt.exp_name = f"{opt.Transformation}-{opt.FeatureExtraction}-{opt.SequenceModeling}-{opt.Prediction}"
+        opt.exp_name += f"-Seed{opt.manualSeed}"
+
+    # Seed and GPU setting
+    pl.seed_everything(opt.manualSeed)
+    cudnn.benchmark = True
+    cudnn.deterministic = True
+    opt.num_gpu = torch.cuda.device_count()
+
+    # Load model from checkpoint if saved_model is exists else create new model
+    if opt.saved_model:
+        if not os.path.exists(opt.saved_model):
+            raise FileNotFoundError(f"{opt.saved_model} is not exist!")
+
+        model = Model.load_from_checkpoint(opt.saved_model, opt=opt)
+        print(f"Model loaded from {opt.saved_model}")
+    else:
+        model = Model(opt)
+        print(f"Model creadted with {yaml_path}")
+
+    # model warm-up with dummy tensor
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    model.to(device)
+    warm_up_image = torch.rand(1, 3, opt.imgH, opt.imgW).to(device)
+    warm_up_text = torch.LongTensor(1, opt.batch_max_length + 1).fill_(0).to(device)
+
+    model(warm_up_image, warm_up_text)
+
+    return model, opt
