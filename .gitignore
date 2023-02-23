@@ -167,6 +167,7 @@ saving_ckpt/
 
 # datset
 *.mdb
+*dataset/**
 
 # training results
 *.ckpt

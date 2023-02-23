@@ -8,7 +8,7 @@ manualSeed             : 1111                                   # for random see
 workers                : 24                                     # number of data loading workers
 batch_size             : 1024                                   # input batch size
 num_epoch              : 1000                                    # number of iterations to train for
-saved_model            : saved_models/best-v2.ckpt                 # path to model to continue training
+saved_model            : saved_models/best-idn-vgg.ckpt                 # path to model to continue training
 FT                     : false                                  # whether to do fine-tuning
 adam                   : false                                  # Whether to use adam (default is Adadelta)
 lr                     : 1                                      # learning rate, default=1.0 for Adadelta
@@ -32,9 +32,9 @@ data_filtering_off     : false                                  # for data_filte
 
 ### Model Architecture ###
 Transformation         : TPS                                    # Transformation stage. None|TPS
-FeatureExtraction      : ResNet                                 # FeatureExtraction stage. VGG|RCNN|ResNet
+FeatureExtraction      : VGG                                 # FeatureExtraction stage. VGG|RCNN|ResNet
 SequenceModeling       : BiLSTM                                 # SequenceModeling stage. None|BiLSTM
-Prediction             : Attn                                    # Prediction stage. CTC|Attn
+Prediction             : Attn                                   # Prediction stage. CTC|Attn
 num_fiducial           : 20                                     # number of fiducial points of TPS-STN
 input_channel          : 1                                      # the number of input channel of Feature extractor
 output_channel         : 512                                    # the number of output channel of Feature extractor
