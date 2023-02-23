@@ -40,6 +40,8 @@ from lprnet.modules.feature_extraction import (
 from lprnet.modules.sequence_modeling import BidirectionalLSTM
 from lprnet.modules.prediction import Attention
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
 class Model(pl.LightningModule):
     def __init__(self, opt):
@@ -514,7 +516,7 @@ class Model(pl.LightningModule):
 
         return predicts
 
-    def imread(self, image, device):
+    def imread(self, image, device=device):
         """
         Read Texts in PIL Image.
 
@@ -617,7 +619,6 @@ def load_LPRNet(yaml_path: str) -> Tuple[Model, Namespace]:
         print(f"Model creadted with {yaml_path}")
 
     # model warm-up with dummy tensor
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
     warm_up_image = torch.rand(1, 3, opt.imgH, opt.imgW).to(device)
     warm_up_text = torch.LongTensor(1, opt.batch_max_length + 1).fill_(0).to(device)

@@ -10,11 +10,9 @@ from PIL import Image
 from lprnet import load_LPRNet
 
 warnings.filterwarnings(action="ignore")
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 def predict(model, opt):
-    model.to(device)
     print(model.hparams)
 
     # IMAGE_FOLDER = '/home/fourind/projects/datas/kor-plates/test'
@@ -31,7 +29,7 @@ def predict(model, opt):
         img = Image.open(f"{IMAGE_FOLDER}/{img_name}")
         label = img_name.split(".")[0].split("-")[0]
 
-        pred, conf, time = model.imread(img, device)
+        pred, conf, time = model.imread(img)
         result["img_names"].append(img_name)
         result["labels"].append(label)
         result["preds"].append(pred)
