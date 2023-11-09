@@ -4,9 +4,8 @@
 
 ## Rewritten with pytorch-lighting
 
-This is a rewritten repository for personal use for the purpose of licence plate recognition.<br>
-This will not be no longer maintained.<br>
-original source is [here](https://github.com/clovaai/deep-text-recognition-benchmark).<br>
+⚠️ This is a rewritten repository for personal use for the purpose of licence plate recognition. This will not be no longer maintained.<br><br>
+[origianl repository](https://github.com/clovaai/deep-text-recognition-benchmark)<br><br>
 
 ## Getting Started
 
