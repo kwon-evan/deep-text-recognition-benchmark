@@ -20,8 +20,8 @@ from pytorch_lightning.loggers.wandb import WandbLogger
 import numpy as np
 from rich import print
 
-from lprnet import Model
-from lprnet import DataModule
+from trba import Model
+from trba import DataModule
 
 warnings.filterwarnings(action="ignore")
 

@@ -6,7 +6,7 @@ import torch.utils.data
 from PIL import Image
 import torchvision.transforms as transforms
 
-from lprnet import load_LPRNet
+from trba import load_LPRNet
 
 warnings.filterwarnings(action="ignore")
 

@@ -7,7 +7,7 @@ import pandas as pd
 from rich import print
 from PIL import Image
 
-from lprnet import load_LPRNet
+from trba import load_LPRNet
 
 warnings.filterwarnings(action="ignore")
 

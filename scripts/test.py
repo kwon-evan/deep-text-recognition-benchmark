@@ -2,7 +2,7 @@ import warnings
 
 import pytorch_lightning as pl
 
-from lprnet import DataModule, load_LPRNet
+from trba import DataModule, load_LPRNet
 
 warnings.filterwarnings(action="ignore")
 
